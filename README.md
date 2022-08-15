@@ -17,6 +17,8 @@ This performance analysis will loop through each frame, and for each cap in each
 pair up with another cap in another frame (frame1), which frame1 - frame0 = 1,2.
 
 It will have a threshold for filtering score that are too low, where the highest score will be selected for pairing up.
+
+```
 Example:
 Reject Threshold - 0.3
 Frame 0 - jockey-id[1,2,5,8] (4 candidates)
@@ -33,6 +35,7 @@ We say that here we have 2 matchable pairs which is 2-2 and 5-5, and we get 2 pa
 The precision will be 1/2 and the recall will be 1/2.
 
 It will do for all of the test races.
+```
 
 ### TO-DO
 

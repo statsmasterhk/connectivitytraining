@@ -3,8 +3,8 @@
 This is the python implementation of Connectivity training code.
 
 ### prepare dataset
-1. Run Generate triplet feature.ipynb to generate triplet features from the tripletTraining repository.
-2. Run generate train test txt.ipynb to generate train/test.txt to define which race for training.
+1. Run Generate triplet feature.ipynb in "TripletTraining" repository to generate triplet features from the tripletTraining repository.
+2. Run Generate train test txt.ipynb to generate train/test.txt to define which race for training.
 3. Set the parameters and run Training.ipynb
 
 ### Analysis

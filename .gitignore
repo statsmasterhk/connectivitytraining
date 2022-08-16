@@ -48,3 +48,9 @@ Thumbs.db
 *.mov
 *.wmv
 
+# Training log
+train_log/*
+# Model
+res/*
+# triplet default folder
+data/*

@@ -37,8 +37,8 @@ class ConnDataset(Dataset):
 
 		cap_1_cx = int((cap_1_info[1] + cap_1_info[3]) / 2)
 		cap_1_cy = int((cap_1_info[0] + cap_1_info[2]) / 2)
-		cap_1_w = int((cap_0_info[1] + cap_0_info[3]) / 2)
-		cap_1_h = int((cap_0_info[0] + cap_0_info[2]) / 2)
+		cap_1_w = int((cap_1_info[3] - cap_1_info[1]))
+		cap_1_h = int((cap_1_info[2] - cap_1_info[0]))
 
 		feat_diff = np.sum((cap_0_feat - cap_1_feat) ** 2) ** 0.5
 		dx = abs(cap_0_cx - cap_1_cx) / (math.sqrt(cap_1_w * cap_1_h) * 100)
@@ -123,7 +123,7 @@ class ConnDataset(Dataset):
 		# 
 		#self.jkcps = # id, x, y, w, h, feature(by running triplet feature extraction)
 
-		self.max_t = 2 # t + (1,2,3,4) frames
+		self.max_t = 4 # t + (1,2,3,4) frames
 		self.classes = 2
 
 		self.feat_dir = feat_dir

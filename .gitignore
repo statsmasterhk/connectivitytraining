@@ -48,6 +48,9 @@ Thumbs.db
 *.mov
 *.wmv
 
+# apidoc file
+docs/_build
+
 # Training log
 train_log/*
 # Model

@@ -1,3 +1,6 @@
+"""
+Modified from util/train_helper.py train_model function
+"""
 import os
 import copy, time
 import torch
@@ -5,7 +8,6 @@ import torch
 from util.logger import get_logger
 from torch.utils.tensorboard import SummaryWriter
 
-### Modified from util/train_helper.py train_model function
 def get_default_param():
     time_str = '{}'.format(time.strftime('%Y-%m-%d-%H-%M-%S'))
     new_dict = {}

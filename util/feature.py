@@ -1,10 +1,11 @@
+"""A Direct copy from Tracking/Models/ReID.py preprocess function
+"""
 import copy
 import cv2
 import numpy as np
 import util.config
 import torch
 
-### Direct copy from Tracking/Models/ReID.py preprocess function
 def preprocess(im, px_mean):
 
   '''

@@ -1,3 +1,30 @@
+""" An modified copy from config.py, for using some of the functions from the main program,
+    Better practice to turn stuff input packages to be called from it directly?
+    # To BE DOCUMENTED
+
+
+Attributes:
+    accepted_formats (list): Description
+    camerachange_save_path (str): Description
+    debug (bool): Description
+    dependencies (TYPE): Description
+    device (TYPE): Description
+    directories (TYPE): Description
+    end_max (int): Description
+    end_min (int): Description
+    feature_size (int): Description
+    frame_height (int): Description
+    frame_width (int): Description
+    gcn_params (TYPE): Description
+    max_framediff (int): Description
+    offset (int): Description
+    pixelstep (int): Description
+    segmentation_model_dir (str): Description
+    start_max (int): Description
+    start_min (int): Description
+    tracking (TYPE): Description
+    video_processer_save_path (str): Description
+"""
 import os, json
 import torch
 

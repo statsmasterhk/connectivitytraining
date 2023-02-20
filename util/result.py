@@ -1,7 +1,9 @@
+"""
+Direct copy from util/result.py import_subsequences_results function with slight modification
+"""
 import os, csv
 import numpy as np
 
-### Direct copy from util/result.py import_subsequences_results function with slight modification
 def import_subsequences_results(path):
     # import trajectories from result
     f = open(path, "r")

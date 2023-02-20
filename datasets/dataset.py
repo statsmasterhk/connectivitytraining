@@ -1,3 +1,5 @@
+""" Training and Testing dataset generating file #######To be documented#######
+"""
 import os
 import math 
 import torch
@@ -9,6 +11,20 @@ from util.result import import_subsequences_results
 from util.feature import triplet_feature_to_list
 
 class ConnDataset(Dataset):
+
+	""" To be documented
+	
+	Attributes:
+	    classes (int): Description
+	    feat_dir (TYPE): Description
+	    inputs (list): Description
+	    jkcp_gt_dir (TYPE): Description
+	    label_classes (list): Description
+	    labels (list): Description
+	    max_t (int): Description
+	    races (TYPE): Description
+	"""
+	
 	def _get_races(self, races_file_path):
 		""" Get to process races from a .txt file, where each line = one racelabel
 		
@@ -31,7 +47,18 @@ class ConnDataset(Dataset):
 		return races
 
 	def _get_caps_pair_info(self, cap_0_info, cap_0_feat, cap_1_info, cap_1_feat, t):
-
+		"""Summary
+		
+		Args:
+		    cap_0_info (TYPE): Description
+		    cap_0_feat (TYPE): Description
+		    cap_1_info (TYPE): Description
+		    cap_1_feat (TYPE): Description
+		    t (TYPE): Description
+		
+		Returns:
+		    TYPE: Description
+		"""
 		cap_0_cx = int((cap_0_info[1] + cap_0_info[3]) / 2)
 		cap_0_cy = int((cap_0_info[0] + cap_0_info[2]) / 2)
 
@@ -47,8 +74,16 @@ class ConnDataset(Dataset):
 		return [feat_diff, dx, dy, norm_t]
 
 	def _generate_pairs(self, feat_dir, jkcp_gt_dir):
-		# For WeightedRandomSampler, maximum 2**24 samples is supported, we will be subsample
-		# from each race if it exceeds the maximum
+		""" Generate training/testing pairs for connectivity model 
+
+		For WeightedRandomSampler, maximum 2**24 samples is supported, we will be subsample
+		from each race if it exceeds the maximum
+
+		Args:
+		    feat_dir (TYPE): Description
+		    jkcp_gt_dir (TYPE): Description
+		"""
+
 		max_sample_per_race = int(2**24 / len(self.races))
 		print(f"Total {len(self.races)} races to be processed.")
 		# Read races_file
@@ -120,6 +155,13 @@ class ConnDataset(Dataset):
 				self.labels.extend(tmp_lbs)
 
 	def __init__(self, races_file, feat_dir, jkcp_gt_dir):
+		"""Summary
+		
+		Args:
+		    races_file (TYPE): Description
+		    feat_dir (TYPE): Description
+		    jkcp_gt_dir (TYPE): Description
+		"""
 		# 
 		#self.jkcps = # id, x, y, w, h, feature(by running triplet feature extraction)
 
@@ -138,11 +180,25 @@ class ConnDataset(Dataset):
 		self._generate_pairs(feat_dir, jkcp_gt_dir)
 
 	def __len__(self):
+		""" Number of samples
+		
+		Returns:
+		    length (int): number of samples
+		"""
 		return len(self.inputs)
 
 
 	def __getitem__(self, idx):
-		# return a pos pair and a neg pair so the training samples is more evenly distributed?
+		"""
+		Idea: return a pos pair and a neg pair so the training samples is more evenly distributed?
+		
+		Args:
+		    idx (int): id of the samples pairs
+		
+		Returns:
+		    input tensor, output tensor (torch.FloatTensor,torch.LongTensor): 
+		    a pair of input(1,4) and output(1,2) for connectivity model
+		"""
 		return torch.FloatTensor(self.inputs[idx]), torch.LongTensor(self.labels[idx])
 
 

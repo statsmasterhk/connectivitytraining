@@ -49,7 +49,8 @@ Thumbs.db
 *.wmv
 
 # apidoc file
-docs/_build
+docs/doctrees
+docs/html
 
 # Training log
 train_log/*

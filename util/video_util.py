@@ -1,10 +1,10 @@
+"""Direct copy from util/video_util.py, changing the encoding part to caching part
+"""
 import os
 import cv2
 import numpy as np
 import psutil
 import util.config
-
-### Direct copy from util/video_util.py, changing the encoding part to caching part
 
 def load_vid(vid_path, start_frame, end_frame, cache_dir):
 

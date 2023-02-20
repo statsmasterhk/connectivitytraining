@@ -6,6 +6,7 @@ import torch.nn.functional as F
 class ConnNet(nn.Module):
 
     """ A Connectivity Network
+    
     expecting intput:
     batch * [feature dist,dx,dy,frame frame difference divided by 2]
     with shape: (batch, in_dim)

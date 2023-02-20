@@ -5,7 +5,16 @@ import os, csv
 import numpy as np
 
 def import_subsequences_results(path):
-    # import trajectories from result
+    """import trajectories from tracking result csv
+    
+    Args:
+        path (str): path to tracking results
+    
+    Returns:
+        stf: start frame number
+        edf: end frame number
+        detected_boxes: Description
+    """
     f = open(path, "r")
     csv_reader = csv.reader(f, delimiter=",")
     detected_boxes = []

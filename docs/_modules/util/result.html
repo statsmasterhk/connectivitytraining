@@ -75,7 +75,16 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <div class="viewcode-block" id="import_subsequences_results"><a class="viewcode-back" href="../../util.result.html#util.result.import_subsequences_results">[docs]</a><span class="k">def</span> <span class="nf">import_subsequences_results</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-    <span class="c1"># import trajectories from result</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;import trajectories from tracking result csv</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        path (str): path to tracking results</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        stf: start frame number</span>
+<span class="sd">        edf: end frame number</span>
+<span class="sd">        detected_boxes: Description</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
     <span class="n">csv_reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
     <span class="n">detected_boxes</span> <span class="o">=</span> <span class="p">[]</span>

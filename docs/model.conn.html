@@ -91,8 +91,8 @@
 <dt class="sig sig-object py" id="model.conn.ConnNet">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">model.conn.</span></span><span class="sig-name descname"><span class="pre">ConnNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/conn.html#ConnNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.conn.ConnNet" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
-<p>A Connectivity Network
-expecting intput:
+<p>A Connectivity Network</p>
+<p>expecting intput:
 batch * [feature dist,dx,dy,frame frame difference divided by 2]
 with shape: (batch, in_dim)</p>
 <p>expecting output:

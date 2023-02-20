@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>util.feature &mdash; Connectivity Training  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Connectivity Training
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">connectivitytraining</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Connectivity Training</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">util.feature</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for util.feature</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">util.config</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="c1">### Direct copy from Tracking/Models/ReID.py preprocess function</span>
+<div class="viewcode-block" id="preprocess"><a class="viewcode-back" href="../../util.feature.html#util.feature.preprocess">[docs]</a><span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">px_mean</span><span class="p">):</span>
+
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Preprocessing the list of images and return a numpy array of preprocessed images.</span>
+<span class="sd">  Preproccsing involves:</span>
+<span class="sd">    1) convert the image to float</span>
+<span class="sd">    2) subtract the pixel mean [104, 117, 123] from the image</span>
+<span class="sd">    3) Resize the image into size (224, 224, 3)</span>
+<span class="sd">    4) assign the image to the ndarray</span>
+<span class="sd">    </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  im : list of images</span>
+<span class="sd">    The cap images to be pre-processed</span>
+<span class="sd">  px_mean : list of 3 elements</span>
+<span class="sd">    The pixel mean [104, 117, 123]. This mean will be subtracted from the input image to normalise the image</span>
+<span class="sd">      </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  out: numpy array of float32</span>
+<span class="sd">    The preprocessed images</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+
+  <span class="n">target_size</span> <span class="o">=</span> <span class="mi">224</span> <span class="c1"># the input size of the cap image to the model</span>
+  <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="p">),</span> <span class="n">target_size</span><span class="p">,</span> <span class="n">target_size</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="p">)):</span>
+    
+    <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">px_mean</span>
+    <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">,:,:,:]</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">im</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">(</span><span class="n">target_size</span><span class="p">,</span><span class="n">target_size</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">INTER_LINEAR</span><span class="p">)</span>
+      
+  <span class="k">return</span> <span class="n">out</span></div>
+
+<span class="c1">### Direct copy from Tracking/Models/ReID.py get_feature function</span>
+<div class="viewcode-block" id="get_feature"><a class="viewcode-back" href="../../util.feature.html#util.feature.get_feature">[docs]</a><span class="k">def</span> <span class="nf">get_feature</span><span class="p">(</span><span class="n">model_dir</span><span class="p">,</span> <span class="n">track</span><span class="p">,</span> <span class="n">caps</span><span class="p">):</span>
+
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  Obtain the feature vectors for the jockey caps with the re-identification network.</span>
+<span class="sd">  This network generates cap feature vector of length 128 for re-identification purposes. Euclidean distance can be computed between the cap features. The shorter the distance, the more likely the caps belong to the same jockey</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  model_dir : str</span>
+<span class="sd">  	The directory to the release models, usually on dropbox or company server</span>
+<span class="sd">  track : str</span>
+<span class="sd">  	The track name, i.e. &#39;HVT&#39;, &#39;STT&#39;, &#39;Kranji&#39;</span>
+<span class="sd">  caps : list of images</span>
+<span class="sd">  	The cap images</span>
+<span class="sd">  </span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  feats : numpy array of float32 </span>
+<span class="sd">  	Feature vectors of shape 128</span>
+<span class="sd">  </span>
+<span class="sd">  Notes</span>
+<span class="sd">  -----</span>
+<span class="sd">  </span>
+<span class="sd">  Post-processing:	Normalisation on the output is necessary for it to be comparible. code &#39;embed = ip_feat / np.linalg.norm(ip_feat, 2, 1, True)&#39;</span>
+<span class="sd">  </span>
+<span class="sd">  Network structure: 	Inception v1 backbone + Triplet Loss</span>
+<span class="sd">  </span>
+<span class="sd">  Future Work:		Re-training the model with a more advanced architecture like the one in jockey re-identification and reduce the size of the input</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  
+  <span class="c1"># Get and load the model from the release model dir</span>
+  <span class="n">device</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">device</span>
+  <span class="n">network_path</span><span class="p">,</span> <span class="n">px_mean</span><span class="p">,</span> <span class="n">batch</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get_model_info</span><span class="p">(</span><span class="n">model_dir</span><span class="p">,</span> <span class="n">track</span><span class="p">,</span> <span class="s2">&quot;ReID&quot;</span><span class="p">)</span>
+  <span class="n">net</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">network_path</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+  <span class="n">net</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+  <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Network Loaded&quot;</span><span class="p">)</span>
+  
+  <span class="c1"># separate the caps into batches, preprocess and extract features batch by batch</span>
+  <span class="n">passes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">caps</span><span class="p">)</span> <span class="o">/</span> <span class="n">batch</span><span class="p">))</span>
+  <span class="n">feats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">caps</span><span class="p">),</span> <span class="mi">128</span><span class="p">))</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">passes</span><span class="p">):</span>
+    
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">passes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">im</span> <span class="o">=</span> <span class="n">preprocess</span><span class="p">(</span><span class="n">caps</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">batch</span><span class="p">:],</span> <span class="n">px_mean</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">im</span> <span class="o">=</span> <span class="n">preprocess</span><span class="p">(</span><span class="n">caps</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">batch</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">batch</span><span class="p">],</span> <span class="n">px_mean</span><span class="p">)</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span> <span class="c1"># transformation to make the channel first</span>
+    
+    <span class="n">input_frames</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span> <span class="c1"># disable gradient, necessary here</span>
+      <span class="n">blobs</span> <span class="o">=</span> <span class="n">net</span><span class="p">(</span><span class="n">input_frames</span><span class="p">)</span>
+    <span class="n">ip_feat</span> <span class="o">=</span> <span class="n">blobs</span><span class="p">[</span><span class="s1">&#39;ip_feat&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+    <span class="n">embed</span> <span class="o">=</span> <span class="n">ip_feat</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">ip_feat</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="c1"># normalise the features to make them comparible to each other</span>
+    
+    <span class="c1"># load the result into the numpy array for return</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">passes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">feats</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">batch</span><span class="p">:,:]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">embed</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">caps</span><span class="p">)</span><span class="o">-</span><span class="n">i</span><span class="o">*</span><span class="n">batch</span><span class="p">,:])</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">feats</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">batch</span><span class="p">:(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">batch</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">embed</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">feats</span></div>
+
+<span class="c1">### Direct copy from Tracking/utils/find_trajectories.py box2im function</span>
+<div class="viewcode-block" id="box2im"><a class="viewcode-back" href="../../util.feature.html#util.feature.box2im">[docs]</a><span class="k">def</span> <span class="nf">box2im</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;obtain the image from the bounding box&#39;&#39;&#39;</span>
+  <span class="k">return</span> <span class="n">image</span><span class="p">[</span><span class="n">box</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">box</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">box</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">box</span><span class="p">[</span><span class="mi">3</span><span class="p">],:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+<span class="c1">### Direct copy from Tracking/utils/find_trajectories.py triplet_feature_to_list function</span>
+<div class="viewcode-block" id="triplet_feature_to_list"><a class="viewcode-back" href="../../util.feature.html#util.feature.triplet_feature_to_list">[docs]</a><span class="k">def</span> <span class="nf">triplet_feature_to_list</span><span class="p">(</span><span class="n">feat_npy</span><span class="p">,</span> <span class="n">detected_boxes</span><span class="p">):</span>
+<span class="w">  </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">  convert the structure of the triplet feature into the same as detected_boxes, i.e. list of list of features</span>
+<span class="sd">  </span>
+<span class="sd">  Parameters</span>
+<span class="sd">  ----------</span>
+<span class="sd">  feat_npy : numpy array</span>
+<span class="sd">    triplet feature in the shape of (total item number, feature_vector_size). If the detected caps are 10000, then, shape is (10000, 128) If the detected jockeys are 8000, then shape is (8000, 2048).</span>
+<span class="sd">    Note the difference in feature vector size, as the caps triplet model is still the old one. </span>
+<span class="sd">  detected_boxes: list of list of list</span>
+<span class="sd">    for every frame, for every cap/jockey, there is a bounding box</span>
+<span class="sd">  Returns</span>
+<span class="sd">  -------</span>
+<span class="sd">  feat_list : list of list of vector(numpy array)</span>
+<span class="sd">      the triplet feature arranged in similar format as detected_boxes</span>
+<span class="sd">  &#39;&#39;&#39;</span>
+  <span class="n">feat_list</span> <span class="o">=</span> <span class="p">[]</span>
+  <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="k">for</span> <span class="n">frm</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">detected_boxes</span><span class="p">)):</span>
+    <span class="n">feat_list</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+    <span class="k">for</span> <span class="n">cbid</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">detected_boxes</span><span class="p">[</span><span class="n">frm</span><span class="p">])):</span>
+      <span class="n">feat_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feat_npy</span><span class="p">[</span><span class="n">count</span><span class="p">,:])</span>
+      <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+  <span class="k">return</span> <span class="n">feat_list</span></div>
+
+<div class="viewcode-block" id="pdist_torch"><a class="viewcode-back" href="../../util.feature.html#util.feature.pdist_torch">[docs]</a><span class="k">def</span> <span class="nf">pdist_torch</span><span class="p">(</span><span class="n">emb1</span><span class="p">,</span> <span class="n">emb2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    compute the eucilidean distance matrix between embeddings1 and embeddings2</span>
+<span class="sd">    using gpu</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">emb1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">emb2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">emb1_pow</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">emb1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">emb2_pow</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">emb2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">t</span><span class="p">()</span>
+    <span class="n">dist_mtx</span> <span class="o">=</span> <span class="n">emb1_pow</span> <span class="o">+</span> <span class="n">emb2_pow</span>
+    <span class="n">dist_mtx</span> <span class="o">=</span> <span class="n">dist_mtx</span><span class="o">.</span><span class="n">addmm_</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="n">emb1</span><span class="p">,</span> <span class="n">emb2</span><span class="o">.</span><span class="n">t</span><span class="p">())</span>
+    <span class="n">dist_mtx</span> <span class="o">=</span> <span class="n">dist_mtx</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">)</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">dist_mtx</span></div>
+
+
+<div class="viewcode-block" id="pdist_np"><a class="viewcode-back" href="../../util.feature.html#util.feature.pdist_np">[docs]</a><span class="k">def</span> <span class="nf">pdist_np</span><span class="p">(</span><span class="n">emb1</span><span class="p">,</span> <span class="n">emb2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    compute the eucilidean distance matrix between embeddings1 and embeddings2</span>
+<span class="sd">    using cpu</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">m</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="n">emb1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">emb2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">emb1_pow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">emb1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+    <span class="n">emb2_pow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">emb2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+    <span class="n">dist_mtx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">emb1</span><span class="p">,</span> <span class="n">emb2</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">+</span> <span class="n">emb1_pow</span> <span class="o">+</span> <span class="n">emb2_pow</span>
+    <span class="n">dist_mtx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dist_mtx</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="nb">min</span> <span class="o">=</span> <span class="mf">1e-12</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dist_mtx</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Statsmaster Ltd..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

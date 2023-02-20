@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>datasets.dataset &mdash; Connectivity Training  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Connectivity Training
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">connectivitytraining</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Connectivity Training</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">datasets.dataset</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for datasets.dataset</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">math</span> 
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">Dataset</span>
+<span class="kn">from</span> <span class="nn">util.result</span> <span class="kn">import</span> <span class="n">import_subsequences_results</span>
+<span class="kn">from</span> <span class="nn">util.feature</span> <span class="kn">import</span> <span class="n">triplet_feature_to_list</span>
+
+<div class="viewcode-block" id="ConnDataset"><a class="viewcode-back" href="../../datasets.dataset.html#datasets.dataset.ConnDataset">[docs]</a><span class="k">class</span> <span class="nc">ConnDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">_get_races</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">races_file_path</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot; Get to process races from a .txt file, where each line = one racelabel</span>
+<span class="sd">		</span>
+<span class="sd">		Args:</span>
+<span class="sd">		    races_file_path (String): Path to races.txt file</span>
+<span class="sd">		</span>
+<span class="sd">		Returns:</span>
+<span class="sd">		    races: List of races string</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># Read races_file</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">races_file_path</span><span class="p">):</span>
+			<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find races_file: </span><span class="si">{</span><span class="n">races_file_path</span><span class="si">}</span><span class="s2">, Please check the file path...&quot;</span><span class="p">)</span>
+
+		<span class="n">races</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">races_file_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span><span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">racelabel</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+				<span class="n">racelabel_str</span> <span class="o">=</span> <span class="n">racelabel</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+				<span class="k">if</span> <span class="n">racelabel_str</span><span class="p">:</span>
+					<span class="n">races</span> <span class="o">+=</span> <span class="p">[</span><span class="n">racelabel_str</span><span class="p">]</span>
+		<span class="k">return</span> <span class="n">races</span>
+
+	<span class="k">def</span> <span class="nf">_get_caps_pair_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cap_0_info</span><span class="p">,</span> <span class="n">cap_0_feat</span><span class="p">,</span> <span class="n">cap_1_info</span><span class="p">,</span> <span class="n">cap_1_feat</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+
+		<span class="n">cap_0_cx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cap_0_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cap_0_info</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+		<span class="n">cap_0_cy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cap_0_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cap_0_info</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+		<span class="n">cap_1_cx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cap_1_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cap_1_info</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+		<span class="n">cap_1_cy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cap_1_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cap_1_info</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+		<span class="n">cap_1_w</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cap_1_info</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">cap_1_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+		<span class="n">cap_1_h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cap_1_info</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">cap_1_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+		<span class="n">feat_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">cap_0_feat</span> <span class="o">-</span> <span class="n">cap_1_feat</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+		<span class="n">dx</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">cap_0_cx</span> <span class="o">-</span> <span class="n">cap_1_cx</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cap_1_w</span> <span class="o">*</span> <span class="n">cap_1_h</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+		<span class="n">dy</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">cap_0_cy</span> <span class="o">-</span> <span class="n">cap_1_cy</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">cap_1_w</span> <span class="o">*</span> <span class="n">cap_1_h</span><span class="p">)</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+		<span class="n">norm_t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="mi">2</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">feat_diff</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">norm_t</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">_generate_pairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feat_dir</span><span class="p">,</span> <span class="n">jkcp_gt_dir</span><span class="p">):</span>
+		<span class="c1"># For WeightedRandomSampler, maximum 2**24 samples is supported, we will be subsample</span>
+		<span class="c1"># from each race if it exceeds the maximum</span>
+		<span class="n">max_sample_per_race</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">24</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">races</span><span class="p">))</span>
+		<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">races</span><span class="p">)</span><span class="si">}</span><span class="s2"> races to be processed.&quot;</span><span class="p">)</span>
+		<span class="c1"># Read races_file</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">races</span><span class="p">)):</span>
+			<span class="n">each_race</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">races</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+			<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="n">each_race</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">races</span><span class="p">)</span><span class="si">}</span><span class="s2">)...&quot;</span><span class="p">)</span>
+			<span class="c1"># Read jkcps_gt_flie, skip the race if jkcps_gt_flie doesn&#39;t exist</span>
+			<span class="c1"># For the CSV</span>
+			<span class="n">jkcp_gt_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">jkcp_gt_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">each_race</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">jkcp_gt_path</span><span class="p">):</span>
+				<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing jkcp gt file for </span><span class="si">{</span><span class="n">each_race</span><span class="si">}</span><span class="s2">, Skipping...&quot;</span><span class="p">)</span>
+				<span class="k">continue</span>
+			<span class="c1">#print(f&quot;Reading GT boxes...&quot;)</span>
+			<span class="n">start_frm</span><span class="p">,</span> <span class="n">end_frm</span><span class="p">,</span> <span class="n">detected_boxes</span> <span class="o">=</span> <span class="n">import_subsequences_results</span><span class="p">(</span><span class="n">jkcp_gt_path</span><span class="p">)</span>
+			<span class="c1">#print(f&quot;Num of frames: {len(detected_boxes)}, Start: {start_frm}, End: {end_frm}&quot;)</span>
+
+			<span class="c1"># Read feature, skip the race if feature file doesn&#39;t exist</span>
+			<span class="n">feature_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">feat_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">each_race</span><span class="si">}</span><span class="s2">.npy&quot;</span><span class="p">)</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">feature_path</span><span class="p">):</span>
+				<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing feature file for </span><span class="si">{</span><span class="n">each_race</span><span class="si">}</span><span class="s2">, Skipping...&quot;</span><span class="p">)</span>
+				<span class="k">continue</span>
+
+			<span class="n">feature_npy_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">feat_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">each_race</span><span class="si">}</span><span class="s2">.npy&quot;</span><span class="p">)</span>
+			<span class="n">triplet_features_caps_npy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">feature_npy_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+			<span class="n">triplet_features_caps</span> <span class="o">=</span> <span class="n">triplet_feature_to_list</span><span class="p">(</span><span class="n">triplet_features_caps_npy</span><span class="p">,</span> <span class="n">detected_boxes</span><span class="p">)</span>
+
+			<span class="c1"># Loop through each t + (1,2,3,4)</span>
+			<span class="n">tmp_inputs</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="n">tmp_lb_classes</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="n">tmp_lbs</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+				<span class="c1">#print(f&quot;Processing t={t}...&quot;)</span>
+				<span class="n">num_of_frm</span> <span class="o">=</span> <span class="n">end_frm</span> <span class="o">-</span> <span class="n">start_frm</span> <span class="o">+</span> <span class="mi">1</span>
+				<span class="k">for</span> <span class="n">frm_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_of_frm</span><span class="p">):</span>
+					<span class="n">next_frm_id</span> <span class="o">=</span> <span class="n">frm_id</span> <span class="o">+</span> <span class="n">t</span>
+					<span class="c1"># if next_frm_id out of bound/</span>
+					<span class="k">if</span> <span class="n">next_frm_id</span> <span class="o">&gt;=</span> <span class="n">num_of_frm</span><span class="p">:</span>
+						<span class="k">continue</span>
+					<span class="n">num_caps_frm_0</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">detected_boxes</span><span class="p">[</span><span class="n">frm_id</span><span class="p">])</span> <span class="c1"># num of caps in frame frm_id</span>
+					<span class="n">num_caps_frm_1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">detected_boxes</span><span class="p">[</span><span class="n">next_frm_id</span><span class="p">])</span><span class="c1"># num of caps in frame frm_id + t</span>
+					<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_caps_frm_0</span><span class="p">):</span>
+						<span class="n">cap_0_box_info</span> <span class="o">=</span> <span class="n">detected_boxes</span><span class="p">[</span><span class="n">frm_id</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="c1"># Contains y1, x1, y2, x2, id</span>
+						<span class="n">cap_0_feat</span> <span class="o">=</span> <span class="n">triplet_features_caps</span><span class="p">[</span><span class="n">frm_id</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+						<span class="n">cap_0_id</span> <span class="o">=</span> <span class="n">cap_0_box_info</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+						<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_caps_frm_1</span><span class="p">):</span>
+							<span class="n">cap_1_box_info</span> <span class="o">=</span> <span class="n">detected_boxes</span><span class="p">[</span><span class="n">next_frm_id</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="c1"># Contains y1, x1, y2, x2, id</span>
+							<span class="n">cap_1_feat</span> <span class="o">=</span> <span class="n">triplet_features_caps</span><span class="p">[</span><span class="n">next_frm_id</span><span class="p">][</span><span class="n">j</span><span class="p">]</span>
+							<span class="n">cap_1_id</span> <span class="o">=</span> <span class="n">cap_1_box_info</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+							<span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_caps_pair_info</span><span class="p">(</span><span class="n">cap_0_box_info</span><span class="p">,</span> <span class="n">cap_0_feat</span><span class="p">,</span> <span class="n">cap_1_box_info</span><span class="p">,</span> <span class="n">cap_1_feat</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+							<span class="c1"># Positive pair if same id, negative pair if not same id</span>
+							<span class="n">tmp_inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+							<span class="k">if</span> <span class="n">cap_0_id</span> <span class="o">==</span> <span class="n">cap_1_id</span><span class="p">:</span>
+								<span class="n">tmp_lb_classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+								<span class="n">tmp_lbs</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+							<span class="k">else</span><span class="p">:</span>
+								<span class="n">tmp_lb_classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+								<span class="n">tmp_lbs</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_inputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">max_sample_per_race</span><span class="p">:</span>
+				<span class="n">sub_samp_ids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tmp_inputs</span><span class="p">),</span> <span class="n">max_sample_per_race</span><span class="p">)</span>
+				<span class="k">for</span> <span class="n">sub_id</span> <span class="ow">in</span> <span class="n">sub_samp_ids</span><span class="p">:</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp_inputs</span><span class="p">[</span><span class="n">sub_id</span><span class="p">])</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">label_classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp_lb_classes</span><span class="p">[</span><span class="n">sub_id</span><span class="p">])</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp_lbs</span><span class="p">[</span><span class="n">sub_id</span><span class="p">])</span>
+				<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;This Race exceeds max sample per race: </span><span class="si">{</span><span class="n">max_sample_per_race</span><span class="si">}</span><span class="s2"> will be randomly sampled&quot;</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tmp_inputs</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">label_classes</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tmp_lb_classes</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tmp_lbs</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">races_file</span><span class="p">,</span> <span class="n">feat_dir</span><span class="p">,</span> <span class="n">jkcp_gt_dir</span><span class="p">):</span>
+		<span class="c1"># </span>
+		<span class="c1">#self.jkcps = # id, x, y, w, h, feature(by running triplet feature extraction)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">max_t</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># t + (1,2,3,4) frames</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">classes</span> <span class="o">=</span> <span class="mi">2</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">feat_dir</span> <span class="o">=</span> <span class="n">feat_dir</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">jkcp_gt_dir</span> <span class="o">=</span> <span class="n">jkcp_gt_dir</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">races</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_races</span><span class="p">(</span><span class="n">races_file</span><span class="p">)</span> <span class="c1"># txt file, containing racelabels of the interested race</span>
+
+		<span class="c1">### Seperate positive samples and negative samples?</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">label_classes</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_generate_pairs</span><span class="p">(</span><span class="n">feat_dir</span><span class="p">,</span> <span class="n">jkcp_gt_dir</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">)</span>
+
+
+	<span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+		<span class="c1"># return a pos pair and a neg pair so the training samples is more evenly distributed?</span>
+		<span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">idx</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span></div>
+
+
+		
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Statsmaster Ltd..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

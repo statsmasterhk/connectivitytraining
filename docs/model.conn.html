@@ -86,22 +86,88 @@
              
   <section id="module-model.conn">
 <span id="model-conn-module"></span><h1>model.conn module<a class="headerlink" href="#module-model.conn" title="Permalink to this heading"></a></h1>
+<p>A Direct copy of class “Conn” from Tracking/Models/Conn.py</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="model.conn.ConnNet">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">model.conn.</span></span><span class="sig-name descname"><span class="pre">ConnNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/conn.html#ConnNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.conn.ConnNet" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>A Connectivity Network
+expecting intput:
+batch * [feature dist,dx,dy,frame frame difference divided by 2]
+with shape: (batch, in_dim)</p>
+<p>expecting output:
+batch * [Similarity score, 1-Similarity score]
+with shape: (batch, out_dim)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.conn.ConnNet.dropout_prob">
+<span class="sig-name descname"><span class="pre">dropout_prob</span></span><a class="headerlink" href="#model.conn.ConnNet.dropout_prob" title="Permalink to this definition"></a></dt>
+<dd><p>Dropout probability</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.conn.ConnNet.fc1">
+<span class="sig-name descname"><span class="pre">fc1</span></span><a class="headerlink" href="#model.conn.ConnNet.fc1" title="Permalink to this definition"></a></dt>
+<dd><p>Fully connected layer, input shape: (batch, in_dim), output shape (batch, 128)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.layer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.conn.ConnNet.fc2">
+<span class="sig-name descname"><span class="pre">fc2</span></span><a class="headerlink" href="#model.conn.ConnNet.fc2" title="Permalink to this definition"></a></dt>
+<dd><p>Fully connected layer, input shape: (batch, 128), output shape (batch, 128)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.layer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.conn.ConnNet.fc3">
+<span class="sig-name descname"><span class="pre">fc3</span></span><a class="headerlink" href="#model.conn.ConnNet.fc3" title="Permalink to this definition"></a></dt>
+<dd><p>Fully connected layer, input shape: (batch, 128), output shape (batch, 128)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.layer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.conn.ConnNet.fc4">
+<span class="sig-name descname"><span class="pre">fc4</span></span><a class="headerlink" href="#model.conn.ConnNet.fc4" title="Permalink to this definition"></a></dt>
+<dd><p>Final Fully connected layer, input shape: (batch, 128), output shape (batch, out_dim)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.nn.layer</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="model.conn.ConnNet.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/conn.html#ConnNet.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.conn.ConnNet.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<dd><p>Network forward function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>Tensor</em>) – shape:(batch, in_dim)</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>shape:(batch, out_dim)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tensor (Tensor)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">

@@ -68,13 +68,39 @@
            <div itemprop="articleBody">
              
   <h1>Source code for model.conn</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span></span><span class="sd">&quot;&quot;&quot;A Direct copy of class &quot;Conn&quot; from Tracking/Models/Conn.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
 <span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
-<span class="kn">import</span> <span class="nn">torchvision</span>
 
 <div class="viewcode-block" id="ConnNet"><a class="viewcode-back" href="../../model.conn.html#model.conn.ConnNet">[docs]</a><span class="k">class</span> <span class="nc">ConnNet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A Connectivity Network</span>
+<span class="sd">    expecting intput:</span>
+<span class="sd">    batch * [feature dist,dx,dy,frame frame difference divided by 2]</span>
+<span class="sd">    with shape: (batch, in_dim)</span>
+
+<span class="sd">    expecting output:</span>
+<span class="sd">    batch * [Similarity score, 1-Similarity score]</span>
+<span class="sd">    with shape: (batch, out_dim)</span>
+
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        dropout_prob (float): Dropout probability</span>
+<span class="sd">        fc1 (torch.nn.layer): Fully connected layer, input shape: (batch, in_dim), output shape (batch, 128)</span>
+<span class="sd">        fc2 (torch.nn.layer): Fully connected layer, input shape: (batch, 128), output shape (batch, 128)</span>
+<span class="sd">        fc3 (torch.nn.layer): Fully connected layer, input shape: (batch, 128), output shape (batch, 128)</span>
+<span class="sd">        fc4 (torch.nn.layer): Final Fully connected layer, input shape: (batch, 128), output shape (batch, out_dim)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_dim</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">out_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dropout_prob</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialise model with parameters (input_dimension,output_dimension,dropout_probability)</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            in_dim (int, optional): input (default = 4)</span>
+<span class="sd">            out_dim (int, optional): out dimension (default = 2)</span>
+<span class="sd">            dropout_prob (float, optional): Dropout probability (default = 0.3)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ConnNet</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dropout_prob</span> <span class="o">=</span> <span class="n">dropout_prob</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">in_dim</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
@@ -84,6 +110,14 @@
 
     
 <div class="viewcode-block" id="ConnNet.forward"><a class="viewcode-back" href="../../model.conn.html#model.conn.ConnNet.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Network forward function</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            inputs (Tensor): shape:(batch, in_dim)</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            tensor (Tensor): shape:(batch, out_dim)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">inputs</span><span class="p">))</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>

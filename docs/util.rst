@@ -8,7 +8,6 @@ Submodules
    :maxdepth: 4
 
    util.config
-   util.dist
    util.feature
    util.logger
    util.result

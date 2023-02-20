@@ -68,14 +68,16 @@
            <div itemprop="articleBody">
              
   <h1>Source code for util.train_helper</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Modified from util/train_helper.py train_model function</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">copy</span><span class="o">,</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">torch</span>
 
 <span class="kn">from</span> <span class="nn">util.logger</span> <span class="kn">import</span> <span class="n">get_logger</span>
 <span class="kn">from</span> <span class="nn">torch.utils.tensorboard</span> <span class="kn">import</span> <span class="n">SummaryWriter</span>
 
-<span class="c1">### Modified from util/train_helper.py train_model function</span>
 <div class="viewcode-block" id="get_default_param"><a class="viewcode-back" href="../../util.train_helper.html#util.train_helper.get_default_param">[docs]</a><span class="k">def</span> <span class="nf">get_default_param</span><span class="p">():</span>
     <span class="n">time_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">-%H-%M-%S&#39;</span><span class="p">))</span>
     <span class="n">new_dict</span> <span class="o">=</span> <span class="p">{}</span>

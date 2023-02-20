@@ -49,7 +49,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="util.html">util package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="util.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="util.config.html">util.config module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="util.dist.html">util.dist module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.feature.html">util.feature module</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">util.logger module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.result.html">util.result module</a></li>
@@ -92,10 +91,26 @@
              
   <section id="module-util.logger">
 <span id="util-logger-module"></span><h1>util.logger module<a class="headerlink" href="#module-util.logger" title="Permalink to this heading"></a></h1>
+<p>Basic Logger setup file</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="util.logger.get_logger">
 <span class="sig-prename descclassname"><span class="pre">util.logger.</span></span><span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train_log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/util/logger.html#get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#util.logger.get_logger" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Create an logging directory,with filename “train-{time_str}”, return an logging object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_dir</strong> (<em>str</em><em>, </em><em>optional</em>) – Directory to where the log are</p></li>
+<li><p><strong>time_str</strong> (<em>str</em><em>, </em><em>optional</em>) – Time in string format to generate distinctive file</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>logging object</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logging.Logger Object</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 

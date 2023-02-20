@@ -18,7 +18,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="util.dist module" href="util.dist.html" />
+    <link rel="next" title="util.feature module" href="util.feature.html" />
     <link rel="prev" title="util package" href="util.html" /> 
 </head>
 
@@ -49,7 +49,6 @@
 <li class="toctree-l2 current"><a class="reference internal" href="util.html">util package</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="util.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">util.config module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="util.dist.html">util.dist module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.feature.html">util.feature module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.logger.html">util.logger module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="util.result.html">util.result module</a></li>
@@ -92,6 +91,231 @@
              
   <section id="module-util.config">
 <span id="util-config-module"></span><h1>util.config module<a class="headerlink" href="#module-util.config" title="Permalink to this heading"></a></h1>
+<dl class="simple">
+<dt>An modified copy from config.py, for using some of the functions from the main program,</dt><dd><p>Better practice to turn stuff input packages to be called from it directly?
+# To BE DOCUMENTED</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.accepted_formats">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">accepted_formats</span></span><a class="headerlink" href="#util.config.accepted_formats" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.camerachange_save_path">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">camerachange_save_path</span></span><a class="headerlink" href="#util.config.camerachange_save_path" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.debug">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">debug</span></span><a class="headerlink" href="#util.config.debug" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.dependencies">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">dependencies</span></span><a class="headerlink" href="#util.config.dependencies" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TYPE</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.device">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">device</span></span><a class="headerlink" href="#util.config.device" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TYPE</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.directories">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">directories</span></span><a class="headerlink" href="#util.config.directories" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TYPE</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.end_max">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">end_max</span></span><a class="headerlink" href="#util.config.end_max" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.end_min">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">end_min</span></span><a class="headerlink" href="#util.config.end_min" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.feature_size">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">feature_size</span></span><a class="headerlink" href="#util.config.feature_size" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.frame_height">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">frame_height</span></span><a class="headerlink" href="#util.config.frame_height" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.frame_width">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">frame_width</span></span><a class="headerlink" href="#util.config.frame_width" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.gcn_params">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">gcn_params</span></span><a class="headerlink" href="#util.config.gcn_params" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TYPE</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.max_framediff">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">max_framediff</span></span><a class="headerlink" href="#util.config.max_framediff" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.offset">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#util.config.offset" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.pixelstep">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">pixelstep</span></span><a class="headerlink" href="#util.config.pixelstep" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.segmentation_model_dir">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">segmentation_model_dir</span></span><a class="headerlink" href="#util.config.segmentation_model_dir" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.start_max">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">start_max</span></span><a class="headerlink" href="#util.config.start_max" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.start_min">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">start_min</span></span><a class="headerlink" href="#util.config.start_min" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.tracking">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">tracking</span></span><a class="headerlink" href="#util.config.tracking" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TYPE</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="util.config.video_processer_save_path">
+<span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">video_processer_save_path</span></span><a class="headerlink" href="#util.config.video_processer_save_path" title="Permalink to this definition"></a></dt>
+<dd><p>Description</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="util.config.HVTConfig">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">util.config.</span></span><span class="sig-name descname"><span class="pre">HVTConfig</span></span><a class="reference internal" href="_modules/util/config.html#HVTConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#util.config.HVTConfig" title="Permalink to this definition"></a></dt>
@@ -219,7 +443,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="util.html" class="btn btn-neutral float-left" title="util package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="util.dist.html" class="btn btn-neutral float-right" title="util.dist module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="util.feature.html" class="btn btn-neutral float-right" title="util.feature module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

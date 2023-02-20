@@ -68,7 +68,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for datasets.dataset</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="sd">&quot;&quot;&quot; Training and Testing dataset generating file #######To be documented#######</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">math</span> 
 <span class="kn">import</span> <span class="nn">torch</span>
 
@@ -79,6 +81,20 @@
 <span class="kn">from</span> <span class="nn">util.feature</span> <span class="kn">import</span> <span class="n">triplet_feature_to_list</span>
 
 <div class="viewcode-block" id="ConnDataset"><a class="viewcode-back" href="../../datasets.dataset.html#datasets.dataset.ConnDataset">[docs]</a><span class="k">class</span> <span class="nc">ConnDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+
+<span class="w">	</span><span class="sd">&quot;&quot;&quot; To be documented</span>
+<span class="sd">	</span>
+<span class="sd">	Attributes:</span>
+<span class="sd">	    classes (int): Description</span>
+<span class="sd">	    feat_dir (TYPE): Description</span>
+<span class="sd">	    inputs (list): Description</span>
+<span class="sd">	    jkcp_gt_dir (TYPE): Description</span>
+<span class="sd">	    label_classes (list): Description</span>
+<span class="sd">	    labels (list): Description</span>
+<span class="sd">	    max_t (int): Description</span>
+<span class="sd">	    races (TYPE): Description</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	
 	<span class="k">def</span> <span class="nf">_get_races</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">races_file_path</span><span class="p">):</span>
 <span class="w">		</span><span class="sd">&quot;&quot;&quot; Get to process races from a .txt file, where each line = one racelabel</span>
 <span class="sd">		</span>
@@ -101,7 +117,18 @@
 		<span class="k">return</span> <span class="n">races</span>
 
 	<span class="k">def</span> <span class="nf">_get_caps_pair_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cap_0_info</span><span class="p">,</span> <span class="n">cap_0_feat</span><span class="p">,</span> <span class="n">cap_1_info</span><span class="p">,</span> <span class="n">cap_1_feat</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
-
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Summary</span>
+<span class="sd">		</span>
+<span class="sd">		Args:</span>
+<span class="sd">		    cap_0_info (TYPE): Description</span>
+<span class="sd">		    cap_0_feat (TYPE): Description</span>
+<span class="sd">		    cap_1_info (TYPE): Description</span>
+<span class="sd">		    cap_1_feat (TYPE): Description</span>
+<span class="sd">		    t (TYPE): Description</span>
+<span class="sd">		</span>
+<span class="sd">		Returns:</span>
+<span class="sd">		    TYPE: Description</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">cap_0_cx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cap_0_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">cap_0_info</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 		<span class="n">cap_0_cy</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">cap_0_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">cap_0_info</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
 
@@ -117,8 +144,16 @@
 		<span class="k">return</span> <span class="p">[</span><span class="n">feat_diff</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">norm_t</span><span class="p">]</span>
 
 	<span class="k">def</span> <span class="nf">_generate_pairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feat_dir</span><span class="p">,</span> <span class="n">jkcp_gt_dir</span><span class="p">):</span>
-		<span class="c1"># For WeightedRandomSampler, maximum 2**24 samples is supported, we will be subsample</span>
-		<span class="c1"># from each race if it exceeds the maximum</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot; Generate training/testing pairs for connectivity model </span>
+
+<span class="sd">		For WeightedRandomSampler, maximum 2**24 samples is supported, we will be subsample</span>
+<span class="sd">		from each race if it exceeds the maximum</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">		    feat_dir (TYPE): Description</span>
+<span class="sd">		    jkcp_gt_dir (TYPE): Description</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
 		<span class="n">max_sample_per_race</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">24</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">races</span><span class="p">))</span>
 		<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">races</span><span class="p">)</span><span class="si">}</span><span class="s2"> races to be processed.&quot;</span><span class="p">)</span>
 		<span class="c1"># Read races_file</span>
@@ -190,6 +225,13 @@
 				<span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tmp_lbs</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">races_file</span><span class="p">,</span> <span class="n">feat_dir</span><span class="p">,</span> <span class="n">jkcp_gt_dir</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;Summary</span>
+<span class="sd">		</span>
+<span class="sd">		Args:</span>
+<span class="sd">		    races_file (TYPE): Description</span>
+<span class="sd">		    feat_dir (TYPE): Description</span>
+<span class="sd">		    jkcp_gt_dir (TYPE): Description</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="c1"># </span>
 		<span class="c1">#self.jkcps = # id, x, y, w, h, feature(by running triplet feature extraction)</span>
 
@@ -208,11 +250,25 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">_generate_pairs</span><span class="p">(</span><span class="n">feat_dir</span><span class="p">,</span> <span class="n">jkcp_gt_dir</span><span class="p">)</span>
 
 	<span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot; Number of samples</span>
+<span class="sd">		</span>
+<span class="sd">		Returns:</span>
+<span class="sd">		    length (int): number of samples</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">)</span>
 
 
 	<span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
-		<span class="c1"># return a pos pair and a neg pair so the training samples is more evenly distributed?</span>
+<span class="w">		</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Idea: return a pos pair and a neg pair so the training samples is more evenly distributed?</span>
+<span class="sd">		</span>
+<span class="sd">		Args:</span>
+<span class="sd">		    idx (int): id of the samples pairs</span>
+<span class="sd">		</span>
+<span class="sd">		Returns:</span>
+<span class="sd">		    input tensor, output tensor (torch.FloatTensor,torch.LongTensor): </span>
+<span class="sd">		    a pair of input(1,4) and output(1,2) for connectivity model</span>
+<span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">FloatTensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">idx</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">LongTensor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span></div>
 
 
